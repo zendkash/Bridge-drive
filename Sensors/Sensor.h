@@ -3,9 +3,8 @@
 
 class Sensor
 {
-private:
-
 public:
+    virtual void sense(){}
 };
 
 #endif

@@ -1,8 +1,8 @@
 //includes
 #include <stdio.h>
-#include "../Abstract Classes/Sensor.h"
-#include "../Abstract Classes/Drive.h"
-#include "../Abstract Classes/ControlAlgorithm.h"
+#include "../Sensors/Sensor.h"
+#include "../Drives/Drive.h"
+#include "../Algorithms/ControlAlgorithm.h"
 #include "SimBridge.h"
 #include "../Sensors/SimSensor.h"
 #include "../Drives/SimDrive.h"
@@ -12,9 +12,9 @@ int main( int argv, char** argc )
 {
     //setup for the simulation, initializing the physical setup
     //maybe let the inputs be changable values (length, weight of the bridge, length of time to run etc.)
-    SimSensor sensors;
-    SimDrive drive;
-    //SimBridge bridge(sensors, drive, )
+    SimBridge bridge;
+    SimSensor sensors(&bridge, 10, 0);
+    SimDrive drive(&bridge);
     ControlAlgorithm algorithm;
   
     bool exit = false;
@@ -23,14 +23,14 @@ int main( int argv, char** argc )
   
     //run simulation code until exit condition is satisfied
         //sense
-        //sensors.sense();
+        sensors.sense();
         //process
-        //algorithm.process();
+        algorithm.process();
         //reflect on the bridge location
-        //drive.updateOutput();
-        //bridge.updatePosition();
+        drive.drive();
+        bridge.updatePos(1000);
 
     }
 
-    return;
+    return 0;
 }

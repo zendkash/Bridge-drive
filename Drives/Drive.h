@@ -6,6 +6,7 @@ class Drive
 private:
 
 public:
+    virtual void drive(){}
 };
 
 #endif

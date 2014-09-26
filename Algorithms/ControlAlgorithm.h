@@ -3,7 +3,8 @@
 
 class ControlAlgorithm
 {
-	
+public:
+    virtual void process(){}
 };
 
 #endif
