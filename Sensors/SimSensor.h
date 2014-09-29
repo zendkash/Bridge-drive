@@ -15,12 +15,12 @@ private:
                     // 0 is infinite resolution
 public:
     SimSensor(SimBridge* simbridge, double width, int res);
-    //void sense();
-    //
-    void getfrsensor();
-    void getflsensor();
-    void getbrsensor();
-    void getblsensor();
+    void sense();
+    
+    void getfrerr(double &tbfrerr);
+    void getflerr(double &tbflerr);
+    void getbrerr(double &tbbrerr);
+    void getblerr(double &tbblerr);
 };
 
 #endif

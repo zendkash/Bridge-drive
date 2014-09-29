@@ -3,10 +3,10 @@
 
 class Drive
 {
-private:
-
+protected:
+    //double lspeed, rspeed;
 public:
-    virtual void drive(){}
+    virtual void drive(double spd){}
 };
 
 #endif
