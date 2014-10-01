@@ -10,6 +10,7 @@ protected:
     Sensor* sensor;
     Drive* drive;
 public:
+    ControlAlgorithm(Sensor* sens, Drive* drv);
     virtual void process(){}
 };
 
