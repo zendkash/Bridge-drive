@@ -6,6 +6,7 @@ class SwerveControlAlgorithm: public ControlAlgorithm
 {
 private:
     int count;
+    bool swerve;
 public:
     SwerveControlAlgorithm(Sensor* sens, Drive* drv);
     void process();
