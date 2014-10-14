@@ -9,9 +9,12 @@ class PIDControlAlgorithm : public ControlAlgorithm
 {
 private:
     double pasterr;
+    double p, i, d;
+    double perr, ierr, derr;
+    double spd;
 public:
-    PIDControlAlgorithm(Sensor* inputsensor, Drive* outputdrive);
-
+    PIDControlAlgorithm(Sensor* inputsensor, Drive* outputdrive, double proportional, double integral, double derivative, double speed);
+    void process();
 };
 
 #endif

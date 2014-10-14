@@ -4,6 +4,7 @@
 #include "../Drives/Drive.h"
 #include "../Algorithms/ControlAlgorithm.h"
 #include "../Algorithms/SwerveControlAlgorithm.h"
+#include "../Algorithms/PIDControlAlgorithm.h"
 #include "SimBridge.h"
 #include "../Sensors/SimSensor.h"
 #include "../Drives/SimDrive.h"
@@ -13,10 +14,10 @@ int main( int argv, char** argc )
 {
     //setup for the simulation, initializing the physical setup
     //maybe let the inputs be changable values (length, weight of the bridge, length of time to run etc.)
-    SimBridge* bridge = new SimBridge;
-    SimSensor* sensors = new SimSensor(bridge, 10, 0);
+    SimBridge* bridge = new SimBridge(0,0,0.25);
+    SimSensor* sensors = new SimSensor(bridge, 0.02, 2);
     SimDrive* drive = new SimDrive(bridge);
-    SwerveControlAlgorithm algorithm(sensors, drive);
+    PIDControlAlgorithm algorithm(sensors, drive, 0.2, 0, 2, 0.2);
     int count = 0;
     bool exit = false;
     double x, y, theta;
@@ -39,6 +40,7 @@ int main( int argv, char** argc )
         fprintf(outfile, "%f\t%f\t%f\n", x, y, theta);
         count++;
     }
+    fclose(outfile);
     getchar();
     return 0;
 }

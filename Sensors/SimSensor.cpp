@@ -4,7 +4,7 @@
 
 using namespace std;
 //make sure the sensor resolution is always odd
-SimSensor::SimSensor(SimBridge* simbridge, double width=10, int res=11)
+SimSensor::SimSensor(SimBridge* simbridge, double width=0.1, int res=11)
 {
     bridge = simbridge;
     sensorwidth = width;
@@ -39,10 +39,29 @@ void SimSensor::sense()
     double exbrerr = (brx - width / 2) / cos(theta);
     double exblerr = (blx + width / 2) / cos(theta);
     
-    frerr = min(round(exfrerr / (sensorwidth / 2)*resolution), (double)resolution / 2);
-    flerr = min(round(exflerr / (sensorwidth / 2)*resolution), (double)resolution / 2);
-    brerr = min(round(exbrerr / (sensorwidth / 2)*resolution), (double)resolution / 2);
-    blerr = min(round(exblerr / (sensorwidth / 2)*resolution), (double)resolution / 2);
+    if (resolution != 0)
+    {
+        frerr = min(abs(round(exfrerr / (sensorwidth / 2)*resolution)), (double)resolution / 2);
+        flerr = min(abs(round(exflerr / (sensorwidth / 2)*resolution)), (double)resolution / 2);
+        brerr = min(abs(round(exbrerr / (sensorwidth / 2)*resolution)), (double)resolution / 2);
+        blerr = min(abs(round(exblerr / (sensorwidth / 2)*resolution)), (double)resolution / 2);
+        if (exfrerr < 0)
+            frerr = frerr*-1;
+        if (exflerr < 0)
+            flerr = flerr*-1;
+        if (exbrerr < 0)
+            brerr = brerr*-1;
+        if (exblerr < 0)
+            blerr = blerr*-1;
+    }
+    else
+    {
+        frerr = exfrerr;
+        flerr = exflerr;
+        brerr = exbrerr;
+        blerr = exblerr;
+    }
+    
 
 }
 

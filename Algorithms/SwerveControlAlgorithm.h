@@ -7,7 +7,8 @@ class SwerveControlAlgorithm: public ControlAlgorithm
 private:
     int count;
     bool swerve;
+    double maxspeed;
 public:
-    SwerveControlAlgorithm(Sensor* sens, Drive* drv);
+    SwerveControlAlgorithm(Sensor* sens, Drive* drv, double speed);
     void process();
 };

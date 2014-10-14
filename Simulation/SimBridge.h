@@ -14,7 +14,7 @@ private:
 	Sensor* simsensor; //sensor object to feed values into (this will also exist in the algorithm
 	Drive* simdrive; //Drive object that affects the wheels (also exists in algorithtm
 public:
-    SimBridge();
+    SimBridge(double initx = 0, double inity = 0, double inittheta = 0);
     void updatePos(int msec);
     void getpos(double &tbx, double &tby, double &tbtheta);
     void getsize(double &tbwidth, double &tblength);

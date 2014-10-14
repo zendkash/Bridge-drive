@@ -1,11 +1,11 @@
 #include "SimBridge.h"
 #include <math.h>
 
-SimBridge::SimBridge()
+SimBridge::SimBridge(double initx,double inity, double inittheta)
 {
-    x = 0;
-    y = 0;
-    theta = 0;//position information
+    x = initx;
+    y = inity;
+    theta = inittheta;//position information
     lspeed = 0;
     rspeed = 0;//speed information
     width = 12;
