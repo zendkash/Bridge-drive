@@ -17,7 +17,7 @@ int main( int argv, char** argc )
     SimBridge* bridge = new SimBridge(0,0,0.25);
     SimSensor* sensors = new SimSensor(bridge, 0.02, 2);
     SimDrive* drive = new SimDrive(bridge);
-    PIDControlAlgorithm algorithm(sensors, drive, 0.2, 0, 2, 0.2);
+    PIDControlAlgorithm algorithm(sensors, drive, 1, 0, 1, 0.2);
     int count = 0;
     bool exit = false;
     double x, y, theta;
@@ -34,7 +34,7 @@ int main( int argv, char** argc )
         algorithm.process();
         //reflect on the bridge location
         drive->drive();
-        bridge->updatePos(1000);
+        bridge->updatePos(100);
         bridge->getpos(x, y, theta);
         printf("%f\t%f\t%f\n", x, y, theta);
         fprintf(outfile, "%f\t%f\t%f\n", x, y, theta);
