@@ -6,14 +6,17 @@ class Drive
 {
 protected:
     Sensor* sensor;
-    double lspeed, rspeed;
+    double nomspd, lspd, rspd;
 public:
-    Drive(Sensor* newsensor){sensor = newsensor; lspeed = 0; rspeed = 0;}
+    Drive(Sensor* newsensor){sensor = newsensor; lspd = 0; rspd = 0; nomspd = 0;}
     virtual void drive(double spd){}
-    virtual void setlspeed(double newlspeed){ lspeed = newlspeed; }
-    virtual void getlspeed(double &tblspeed){ tblspeed = lspeed; }
-    virtual void setrspeed(double newrspeed){ rspeed = newrspeed; }
-    virtual void getrspeed(double &tbrspeed){ tbrspeed = rspeed; }
+    
+    virtual void setnomspd(double newnomspd){ nomspd = newnomspd; }
+    virtual void getnomspd(double &tbnomspd){ tbnomspd = nomspd; }
+    virtual void setlspd(double newlspd){ lspd = newlspd; }
+    virtual void getlspd(double &tblspd){ tblspd = lspd; }
+    virtual void setrspd(double newrspd){ rspd = newrspd; }
+    virtual void getrspd(double &tbrspd){ tbrspd = rspd; }
 };
 
 #endif

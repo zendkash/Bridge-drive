@@ -1,12 +1,12 @@
 #include "PIDControlAlgorithm.h"
 #include <stdio.h>
 
-PIDControlAlgorithm::PIDControlAlgorithm(Sensor* inputsensor, Drive* outputdrive, double proportional, double integral, double derivative, double speed) : ControlAlgorithm(inputsensor, outputdrive)
+PIDControlAlgorithm::PIDControlAlgorithm(Sensor* inputsensor, Drive* outputdrive, double proportional, double integral, double derivative, double maxspeed) : ControlAlgorithm(inputsensor, outputdrive)
 {
     p = proportional;
     i = integral;
     d = derivative;
-    spd = speed;
+    maxspd = maxspeed;
 }
 
 void PIDControlAlgorithm::process()
@@ -28,7 +28,10 @@ void PIDControlAlgorithm::process()
     derr = newderr;
 
     double totalerr = perr + ierr + derr;
-
-    drive->setlspeed(spd - totalerr);
-    drive->setrspeed(spd + totalerr);
+    double nomspeed;
+    drive->getnomspd(nomspeed);
+    totalerr = totalerr*nomspeed/maxspd;
+    
+    drive->setlspd(nomspeed - totalerr);
+    drive->setrspd(nomspeed + totalerr);
 }

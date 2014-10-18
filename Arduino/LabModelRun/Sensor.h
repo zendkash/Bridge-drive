@@ -4,7 +4,8 @@
 class Sensor
 {
 public:
-    virtual void sense(){}
+    virtual void init(){};
+    virtual void sense(){};
     virtual void getfrerr(double &tbfrerr){};
     virtual void getflerr(double &tbflerr){};
     virtual void getbrerr(double &tbbrerr){};
