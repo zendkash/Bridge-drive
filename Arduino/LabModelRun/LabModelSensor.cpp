@@ -1,14 +1,20 @@
 #include "LabModelSensor.h"
 
-LabModelSensor::LabModelSensor() : Sensor()
+LabModelSensor::LabModelSensor() : 
+Sensor()
 {
-  
+
   flothresh = 600;
-  frothresh = 550;
-  flithresh = 700;
+  frothresh = 600;
+  flithresh = 600;
   frithresh = 600;
   lastfrerr = 0;
   lastflerr = 0;
+  
+  flerr = 0;
+  frerr = 0;
+  blerr = 0;
+  brerr = 0;
 }
 
 void LabModelSensor::init()
@@ -41,46 +47,76 @@ void LabModelSensor::sense() {
   floraw = analogRead(FLO_ANALOG_PIN);
   friraw = analogRead(FRI_ANALOG_PIN);
   froraw = analogRead(FRO_ANALOG_PIN);
-  
+
+  Serial.print(fliraw);
+  Serial.print(", ");
+  Serial.print(floraw);
+  Serial.print(", ");
+  Serial.print(friraw);
+  Serial.print(", ");
+  Serial.print(froraw);
+  Serial.print(", ");
+
   bool fribool, frobool, flibool, flobool;
-  
+
   //threshold the raw inputs using flithresh, frithresh, flothresh, frothresh
   fribool = friraw > frithresh;
   flibool = fliraw > flithresh;
   frobool = froraw > frothresh;
   flobool = floraw > flothresh;
+  Serial.print(fribool);
+  Serial.print(frobool);
+  Serial.print(flibool);
+  Serial.print(flobool);
   
   //calculate error based on past state as well (if o was off and i was on before and theyre both off now, make the error far to the o side)
   if(frobool && fribool){
     frerr = 0;
   }
   else if(!frobool){
-    if(lastfrerr == 1 && !flibool) {frerr = 2;}
-    else if(lastfrerr == -1) {frerr = -2;}
-    else {frerr = 1;}
+    if((lastfrerr == 1 || lastfrerr == 2) && !fribool) {
+      frerr = 2;
+    }
+    else if(lastfrerr == -1 || lastfrerr == -2) {
+      frerr = -2;
+    }
+    else {
+      frerr = 1;
+    }
   }
   else if(!fribool){
     frerr = -1;
   }
-  
+
   if(flobool && flibool){
     flerr = 0;
   }
   else if(!flibool){
-    if(lastflerr == 1 && !flobool) {frerr = 2;}
-    else if(lastflerr == -1) {frerr = -2;}
-    else {flerr = 1;}
+    if((lastflerr == 1 || lastflerr == 2) && !flobool) {
+      flerr = 2;
+    }
+    else if(lastflerr == -1 || lastflerr == -2) {
+      flerr = -2;
+    }
+    else {
+      flerr = 1;
+    }
   }
   else if(!flobool){
     flerr = -1;
   }
-  
+
   lastflerr = flerr;
   lastfrerr = frerr;
   //update error values
   brerr = 0;
   blerr = 0;
 
+  
+  Serial.print(":");
+  Serial.print(frerr);
+  Serial.print(":");
+  Serial.print(flerr);
   updateEncoder(ENC_L_A_PIN, ENC_L_B_PIN, encLAstate, encLBstate, lenccount);
   updateEncoder(ENC_R_A_PIN, ENC_R_B_PIN, encRAstate, encRBstate, renccount);
 }
@@ -145,4 +181,6 @@ int LabModelSensor::getfri() {
 int LabModelSensor::getfro() {
   return froraw;
 }
+
+
 

@@ -39,7 +39,7 @@ Drive(newsensor)
   analogWrite(EN1, OUTPUT);
   analogWrite(EN2, OUTPUT);
   analogWrite(IN1, OUTPUT);
-  analogWrite(IN2, OUTPUT);
+  analogWrite(IN2, OUTPUT);  
   Motor1(0,false);
   Motor2(0,false);
 }
@@ -53,6 +53,9 @@ void LabModelDrive::drive()
 
   Motor1(lspd, true);
   Motor2(rspd, true);
+  
+  Serial.print(lspd);
+  Serial.print(", ");
+  Serial.print(rspd);
+  Serial.println();
 }
-
-
