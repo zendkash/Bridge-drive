@@ -1,47 +1,65 @@
 #include "FSPDrive.h"
-
+#include <Arduino.h>
+#include <SPI.h>
 #define EN1 6
 #define EN2 5
 #define IN1 7
 #define IN2 4
+#define SLAVEPIN 10
 
-void Motor1(int pwm, boolean reverse) {
-  if (pwm > 255) {pwm = 255;}
-  if (pwm < 0) {pwm = 0;}
-  analogWrite(EN1,pwm); //set pwm control, 0 for stop, and 255 for maximum speed
-  if(reverse) { 
-    digitalWrite(IN1,HIGH);    
+int writetoDAC(int operation, int value){
+  int r1, r0;
+  switch (operation){
+  case 0:
+    r0 = 0;
+    r1 = 0;
+    break;
+  case 1:
+    r0 = 4096;
+    r1 = 0;    
+    break;
+  case 2:
+    r0 = 0;
+    r1 = 32768;
+    break;
+  default:
+    return -1;
   }
-  else {
-    digitalWrite(IN1,LOW);    
-  }
+  int data = r0 + r1 + (value<<2);
+//  for(int i = 15; i != -1; i--) {
+//    Serial.print(0x01&(data>>i));
+//  }
+//  Serial.println();
+
+  int secondbyte = data;
+  int firstbyte = data >> 8;
+  digitalWrite(SLAVEPIN,LOW);
+  SPI.transfer(firstbyte);
+  SPI.transfer(secondbyte);
+  digitalWrite(SLAVEPIN,HIGH);
+}
+
+void Motor1(int val) {
+  writetoDAC(1, val);
 }  
 
-void Motor2(int pwm, boolean reverse) {
-  if (pwm > 255) {pwm = 255;}
-  if (pwm < 0) {pwm = 0;}
-  analogWrite(EN2,pwm);
-  if(reverse) {
-    digitalWrite(IN2,HIGH);
-  }
-  else
-  {
-    digitalWrite(IN2,LOW);    
-  }
+void Motor2(int val) {
+  writetoDAC(2, val);
 }  
 
-FSPDrive::FSPDrive(Sensor* newsensor, double wSize, int numcounts, double newnomspd) : 
+FSPDrive::FSPDrive(Sensor* newsensor, double newnomspd) : 
 Drive(newsensor)
 {
-  wheelSize = wSize;
-  countsPerRot = numcounts;
   nomspd = newnomspd;
-  analogWrite(EN1, OUTPUT);
-  analogWrite(EN2, OUTPUT);
-  analogWrite(IN1, OUTPUT);
-  analogWrite(IN2, OUTPUT);  
-  Motor1(0,false);
-  Motor2(0,false);
+  // set the slaveSelectPin as an output:
+  pinMode (SLAVEPIN, OUTPUT);
+  // initialize SPI:
+  SPI.begin(); 
+  SPI.setBitOrder(MSBFIRST);
+  SPI.setClockDivider(SPI_CLOCK_DIV2);
+  SPI.setDataMode(SPI_MODE2);
+  Motor1(0);
+  Motor2(0);
 }
 
 void FSPDrive::drive(int nomspeed, bool forward)
@@ -60,8 +78,8 @@ void FSPDrive::drive(int nomspeed, bool forward)
     Motor2(lspd);  
   }
   
+  Serial.print(", lspd: ");
   Serial.print(lspd);
-  Serial.print(", ");
+  Serial.print(", rspd: ");
   Serial.print(rspd);
-  Serial.println();
 }

@@ -4,14 +4,14 @@
 #include "Sensor.h"
 #include "Arduino.h"
 
-#define FLI_PIN 1
-#define FLO_PIN 2
-#define FRI_PIN 3
-#define FRO_PIN 4
-#define BLI_PIN 5
-#define BLO_PIN 6
-#define BRI_PIN 7
-#define BRO_PIN 8
+#define FLI_PIN 4
+#define FLO_PIN 5
+#define FRI_PIN A1
+#define FRO_PIN A0
+#define BLI_PIN A2
+#define BLO_PIN A3
+#define BRI_PIN 3
+#define BRO_PIN 2
 
 class FSPSensor: public Sensor
 {

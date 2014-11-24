@@ -28,9 +28,14 @@ void FSPSensor::init()
 void FSPSensor::sense(bool forward) {
   if(forward) {
   //reset errors if you switch directions
-    if(directon != forward){
+    if(direction != forward){
       lastfrerr = 0;
       lastflerr = 0;
+      
+      flerr = 0;
+      frerr = 0;
+      blerr = 0;
+      brerr = 0;
       direction = forward;
     }
     fliraw = digitalRead(FLI_PIN);
@@ -39,9 +44,14 @@ void FSPSensor::sense(bool forward) {
     froraw = digitalRead(FRO_PIN);
   }
   else{
-    if(directon != forward){
+    if(direction != forward){
       lastfrerr = 0;
       lastflerr = 0;
+      
+      flerr = 0;
+      frerr = 0;
+      blerr = 0;
+      brerr = 0;
       direction = forward;
     }
     fliraw = digitalRead(BLI_PIN);
@@ -50,14 +60,14 @@ void FSPSensor::sense(bool forward) {
     froraw = digitalRead(BRO_PIN);  
   }
 
+  Serial.print(", FLI: ");
   Serial.print(fliraw);
-  Serial.print(", ");
+  Serial.print(", FLO: ");
   Serial.print(floraw);
-  Serial.print(", ");
+  Serial.print(", FRI: ");
   Serial.print(friraw);
-  Serial.print(", ");
+  Serial.print(", FRO: ");
   Serial.print(froraw);
-  Serial.print(", ");
 
   bool fribool, frobool, flibool, flobool;
 
@@ -66,10 +76,10 @@ void FSPSensor::sense(bool forward) {
   flibool = fliraw;
   frobool = froraw;
   flobool = floraw;
-  Serial.print(fribool);
-  Serial.print(frobool);
-  Serial.print(flibool);
-  Serial.print(flobool);
+//  Serial.print(fribool);
+//  Serial.print(frobool);
+//  Serial.print(flibool);
+//  Serial.print(flobool);
   
   //calculate error based on past state as well (if o was off and i was on before and theyre both off now, make the error far to the o side)
   if(frobool && fribool){
@@ -115,12 +125,10 @@ void FSPSensor::sense(bool forward) {
   blerr = 0;
 
   
-  Serial.print(":");
-  Serial.print(frerr);
-  Serial.print(":");
-  Serial.print(flerr);
-  updateEncoder(ENC_L_A_PIN, ENC_L_B_PIN, encLAstate, encLBstate, lenccount);
-  updateEncoder(ENC_R_A_PIN, ENC_R_B_PIN, encRAstate, encRBstate, renccount);
+//  Serial.print(":");
+//  Serial.print(frerr);
+//  Serial.print(":");
+//  Serial.print(flerr);
 }
 
 void FSPSensor::getfrerr(double &tbfrerr) {
@@ -137,14 +145,6 @@ void FSPSensor::getbrerr(double &tbbrerr) {
 
 void FSPSensor::getblerr(double &tbblerr) {
   tbblerr = blerr;
-}
-
-void FSPSensor::getlenccount(long &tblenccount) {
-  tblenccount = lenccount;
-}
-
-void FSPSensor::getrenccount(long &tbrenccount) {
-  tbrenccount = renccount;
 }
 
 int FSPSensor::getfli() {

@@ -3,15 +3,14 @@
 #include "Drive.h"
 #include "Sensor.h"
 #include "Arduino.h"
+#include <SPI.h>
 
 class FSPDrive: public Drive
 {
 protected:
-    double wheelSize;
-    int countsPerRot;
 public:
-    LabModelDrive(Sensor* newsensor, double wSize, int numcounts, double newnomspd);
-    virtual void drive(int nomspeed);
+    FSPDrive(Sensor* newsensor, double newnomspd);
+    virtual void drive(int nomspeed, bool forward);
 };
 
 #endif

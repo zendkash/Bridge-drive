@@ -22,19 +22,19 @@ void PIDControlAlgorithm::process()
     sensor->getbrerr(brerr);
     //printf("%f\t%f\n", flerr, frerr);
     //getchar();
-    Serial.print(" ");
-    Serial.print(flerr);
-    Serial.print(" ");
-    Serial.print(" ");
-    Serial.print(frerr);
-    Serial.print(" ");
+//    Serial.print(" ");
+//    Serial.print(flerr);
+//    Serial.print(" ");
+//    Serial.print(" ");
+//    Serial.print(frerr);
+//    Serial.print(" ");
     double newperr = p*(flerr + frerr);
     double newierr = ierr + i*(perr);
     double newderr = d*(newperr - perr);
     
-    Serial.print(" ");
-    Serial.print(newperr);
-    Serial.print(" ");
+//    Serial.print(" ");
+//    Serial.print(newperr);
+//    Serial.print(" ");
     perr = newperr;
     ierr = newierr;
     derr = newderr;
@@ -42,14 +42,14 @@ void PIDControlAlgorithm::process()
     double totalerr = perr + ierr + derr;
     double nomspeed;
     drive->getnomspd(nomspeed);
-    Serial.print(" ");
-    Serial.print(totalerr);
-    Serial.print(" ");
+//    Serial.print(" ");
+//    Serial.print(totalerr);
+//    Serial.print(" ");
     totalerr = totalerr*nomspeed/maxspd;
     
-    Serial.print(" ");
-    Serial.print(totalerr);
-    Serial.print(" ");
-    drive->setlspd(min(nomspeed - totalerr,maxspd));
-    drive->setrspd(min(nomspeed + totalerr,maxspd));
+//    Serial.print(" ");
+//    Serial.print(totalerr);
+//    Serial.print(" ");
+    drive->setlspd(max(min(nomspeed - totalerr,maxspd),0));
+    drive->setrspd(max(min(nomspeed + totalerr,maxspd),0));
 }
