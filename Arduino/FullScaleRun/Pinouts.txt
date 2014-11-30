@@ -1,0 +1,16 @@
+Jog Switch: 45
+COM Remote: 50
+GO Remote: 48
+JOG Remote: 49
+REEL Remote: 47
+JOG2 Remote: 46
+Reverse: 43 (0 if reverse, else 1)
+Forward: 44 (0 if forward, 1 if not)
+FRI: 4
+FRO: 5
+BRI: 3
+BRO: 2
+BLI: 9
+BLO: 8
+FLI: 7
+FLO: 6

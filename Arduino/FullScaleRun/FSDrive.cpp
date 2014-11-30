@@ -1,11 +1,7 @@
 #include "FSDrive.h"
 #include <Arduino.h>
 #include <SPI.h>
-#define EN1 6
-#define EN2 5
-#define IN1 7
-#define IN2 4
-#define SLAVEPIN 10
+#define SLAVEPIN 53
 
 int writetoDAC(int operation, int value){
   int r1, r0;

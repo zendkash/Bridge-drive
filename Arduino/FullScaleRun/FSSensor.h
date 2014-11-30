@@ -4,12 +4,12 @@
 #include "Sensor.h"
 #include "Arduino.h"
 
-#define FLI_PIN 4
-#define FLO_PIN 5
-#define FRI_PIN A1
-#define FRO_PIN A0
-#define BLI_PIN A2
-#define BLO_PIN A3
+#define FLI_PIN 7
+#define FLO_PIN 6
+#define FRI_PIN 4
+#define FRO_PIN 5
+#define BLI_PIN 9
+#define BLO_PIN 8
 #define BRI_PIN 3
 #define BRO_PIN 2
 
@@ -41,8 +41,8 @@ public:
   int getblo();
   int getbri();
   int getbro();
+  bool allFrontSensorsOff();
+  bool allBackSensorsOff();
 };
 
 #endif
-
-

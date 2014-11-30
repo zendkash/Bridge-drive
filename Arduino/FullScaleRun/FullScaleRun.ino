@@ -2,54 +2,71 @@
 #include "FSDrive.h"
 #include "PIDControlAlgorithm.h"
 #include "Arduino.h"
+#include "Remote.h"
 #include <SPI.h>
+
+#define FORWARDSWITCH 43
+#define REVERSESWITCH 44
+#define JOGSWITCH 45
+#define SPEEDPOT 0
+
+#define MAX_NOSENSE_ITERATIONS 3
 
 FSSensor* sensor = new FSSensor();
 
 FSDrive* drive = new FSDrive(sensor, 0);
 //                                                                    P , I,  D,  w
-ControlAlgorithm* controller = new PIDControlAlgorithm(sensor, drive, 120, 0, 10, 1, 511); 
+ControlAlgorithm* controller = new PIDControlAlgorithm(sensor, drive, 120, 0, 10, 0.5, 1023); 
+Remote* remote = new Remote();
+
+int spd;
+bool forward, reverse, jog;
+bool forwarddirection;
+int numIterationsOffTrack;
 
 void setup()
 {
   Serial.begin(9600);
   Serial.flush();
-  pinMode(12,INPUT);
-  pinMode(7,INPUT);
-  pinMode(8,INPUT);
-  pinMode(9,INPUT);
-  digitalWrite(12, HIGH);
-  digitalWrite(7, HIGH);
-  digitalWrite(8, HIGH);
-  digitalWrite(9, HIGH);
+  pinMode(FORWARDSWITCH,INPUT);
+  pinMode(REVERSESWITCH,INPUT);
+  pinMode(JOGSWITCH,INPUT);
+  digitalWrite(FORWARDSWITCH,HIGH);
+  digitalWrite(REVERSESWITCH,HIGH);
+  digitalWrite(JOGSWITCH,HIGH);
   sensor->init();
+  remote->init();
 }
 
 void loop()
 {
-  int spd;
-  bool emstop, forward, go, jog;
-  spd = analogRead(5)/2;
-  emstop = digitalRead(12);
-  forward = digitalRead(7);
-  go = digitalRead(8);
-  jog = digitalRead(9);
+  spd = analogRead(SPEEDPOT);
+  forward = !digitalRead(FORWARDSWITCH);
+  reverse = !digitalRead(REVERSESWITCH);
+  jog = digitalRead(JOGSWITCH);
+  remote->check();
   //since the emergency stop is normally open, switch convension to make logical sense
-  emstop = !emstop;
 
-  Serial.print("EM Stop: ");
-  Serial.print(emstop);
-  Serial.print(", Forward: ");
+  Serial.print("Switches: {FWD ");
   Serial.print(forward);
-  Serial.print(", Go: ");
-  Serial.print(go);
-  Serial.print(", Jog: ");
+  Serial.print(", REV ");
+  Serial.print(reverse);
+  Serial.print(", JOG ");
   Serial.print(jog);
-  Serial.print(", Speed: ");
+  Serial.print(", SPD ");
   Serial.print(spd);
+  Serial.print("} Remote: {GO ");
+  Serial.print(remote->getStart());
+  Serial.print(", RST ");
+  Serial.print(remote->getReset());
+  Serial.print(", JOG ");
+  Serial.print(remote->getJog1());
+  Serial.print(", EXT ");
+  Serial.print(remote->getJog2());
+  Serial.print("}");
 
-  if (!emstop){
-    if(go){
+  if(numIterationsOffTrack < MAX_NOSENSE_ITERATIONS) {
+    if(remote->getStart() && (forward || reverse)){
       //  Serial.println("Entering sense");
       sensor->sense(forward);
       //  Serial.print(sensor->getfli());
@@ -65,7 +82,7 @@ void loop()
       //  Serial.println("Entering driver");
       drive->drive(spd,forward);
     }
-    else if(jog){
+    else if(jog || remote->getJog1()){
       drive->setlspd(spd);
       drive->setrspd(spd);
       drive->drive(spd, forward);
@@ -75,13 +92,27 @@ void loop()
       drive->setrspd(0);
       drive->drive(spd, forward);
     }
+    if(sensor->allFrontSensorsOff() || sensor->allBackSensorsOff()) {
+      numIterationsOffTrack+=1;
+    }
   }
-  else{
+  else {
     drive->setlspd(0);
     drive->setrspd(0);
     drive->drive(spd, forward);
-  }  
+  }
+  if(remote->getReset()) {
+    numIterationsOffTrack=0;
+  }
   Serial.print(", Time: ");
   Serial.println(millis());
 }
+
+
+
+
+
+
+
+
 

@@ -1,8 +1,8 @@
 #include <SPI.h>
 
 // set pin 10 as the slave select for the digital pot:
-const int slavepin = 10;
-int serialData;
+const int slavepin = 53;
+int serialDataA, serialDataB;
 
 void setup() {
   // set the slaveSelectPin as an output:
@@ -17,13 +17,15 @@ void setup() {
 
 void loop(){
   if(Serial.available()) {
-    serialData = Serial.parseInt();
+    serialDataA = Serial.parseInt();
+    Serial.read();
+    serialDataB = Serial.parseInt();
     //    Serial.print("Received ");
     //    Serial.println(serialData);
-    writetoDAC(1, serialData);
+    writetoDAC(1, serialDataA);
 //    writetoDAC(1, serialData);
 //    writetoDAC(2, serialData);
-    writetoDAC(2, serialData);
+    writetoDAC(2, serialDataB);
     Serial.flush();
   }
 }

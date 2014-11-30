@@ -48,7 +48,7 @@ void FSSensor::sense(bool forward) {
     broraw = digitalRead(BRO_PIN);
   }
   else{
-    if(direction != forward){
+    if(direction == forward){
       lastfrerr = 0;
       lastflerr = 0;
 
@@ -56,16 +56,16 @@ void FSSensor::sense(bool forward) {
       frerr = 0;
       blerr = 0;
       brerr = 0;
-      direction = forward;
+      direction = !forward;
     }
-    fliraw = digitalRead(BLI_PIN);
-    floraw = digitalRead(BLO_PIN);
-    friraw = digitalRead(BRI_PIN);
-    froraw = digitalRead(BRO_PIN);  
-    bliraw = digitalRead(FLI_PIN);
-    bloraw = digitalRead(FLO_PIN);
-    briraw = digitalRead(FRI_PIN);
-    broraw = digitalRead(FRO_PIN);
+    fliraw = digitalRead(BRI_PIN);
+    floraw = digitalRead(BRO_PIN);
+    friraw = digitalRead(BLI_PIN);
+    froraw = digitalRead(BLO_PIN);  
+    bliraw = digitalRead(FRI_PIN);
+    bloraw = digitalRead(FRO_PIN);
+    briraw = digitalRead(FLI_PIN);
+    broraw = digitalRead(FLO_PIN);
   }
 
   Serial.print(", FLI: ");
@@ -76,6 +76,14 @@ void FSSensor::sense(bool forward) {
   Serial.print(friraw);
   Serial.print(", FRO: ");
   Serial.print(froraw);
+  Serial.print(", BLI: ");
+  Serial.print(bliraw);
+  Serial.print(", BLO: ");
+  Serial.print(bloraw);
+  Serial.print(", BRI: ");
+  Serial.print(briraw);
+  Serial.print(", BRO: ");
+  Serial.print(broraw);
 
   bool fribool, frobool, flibool, flobool, bribool, brobool, blibool, blobool;
   ;
@@ -171,10 +179,11 @@ void FSSensor::sense(bool forward) {
   lastflerr = flerr;
   lastfrerr = frerr;
   //update error values
-  brerr = -brerr;
-  blerr = -blerr;
-  lastblerr = brerr;
   lastblerr = blerr;
+  lastbrerr = brerr;
+
+  blerr = -blerr;
+  brerr = -brerr;
 
   //  Serial.print(":");
   //  Serial.print(frerr);
@@ -229,4 +238,12 @@ int FSSensor::getbri() {
 int FSSensor::getbro() {
   return broraw;
 }
+
+bool FSSensor::allFrontSensorsOff() {
+  return (fliraw+friraw+ floraw + froraw)==0;
+}
+bool FSSensor::allBackSensorsOff() {
+  return (bliraw+ briraw+bloraw+broraw)==0;
+};
+
 
