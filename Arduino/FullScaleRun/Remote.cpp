@@ -18,11 +18,53 @@ void Remote::init() {
 }
 
 void Remote::check() {
-  start=digitalRead(GO_PIN);
-  reel=digitalRead(REEL_PIN);
-  jog_1=digitalRead(JOG_PIN_1);
-  jog_2=digitalRead(JOG_PIN_2);
-  main=digitalRead(MAIN_PIN);
+  boolean startraw, reelraw, jog_1raw, jog_2raw, mainraw;
+  startraw=digitalRead(GO_PIN);
+  reelraw=digitalRead(REEL_PIN);
+  jog_1raw=digitalRead(JOG_PIN_1);
+  jog_2raw=digitalRead(JOG_PIN_2);
+  mainraw=digitalRead(MAIN_PIN);
+  if((startraw == startrawlast) && (startraw!=startlast)) {
+    start = startraw;
+  }
+  else {
+    start = startlast; 
+  }
+  if((reelraw == reelrawlast) && (reelraw!=reellast)) {
+    reel = reelraw;
+  }
+  else {
+    reel = reellast; 
+  }
+  if((jog_1raw == jog_1rawlast) && (jog_1raw!=jog_1last)) {
+    jog_1 = jog_1raw;
+  }
+  else {
+    jog_1 = jog_1last; 
+  }
+  if((jog_2raw == jog_2rawlast) && (jog_2raw!=jog_2last)) {
+    jog_2 = jog_2raw;
+  }
+  else {
+    jog_2 = jog_2last; 
+  }
+  if((mainraw == mainrawlast) && (mainraw!=mainlast)) {
+    main = mainraw;
+  }
+  else {
+    main = mainlast; 
+  }
+  startrawlast = startraw;
+  reelrawlast = reelraw;
+  jog_1rawlast = jog_1raw;
+  jog_2rawlast = jog_2raw;
+  mainrawlast = mainraw;
+
+  startlast = start;
+  reellast = reel;
+  jog_1last = jog_1;
+  jog_2last = jog_2;
+  mainlast = main;
 }
 
 boolean Remote::getStart() {
@@ -34,7 +76,7 @@ boolean Remote::getReset() {
 }
 
 boolean Remote::getJog1() {
-  return !jog_1; 
+  return !jog_1;
 }
 
 boolean Remote::getJog2() {
@@ -44,6 +86,9 @@ boolean Remote::getJog2() {
 boolean Remote::getMain() {
   return !main;
 }
+
+
+
 
 
 

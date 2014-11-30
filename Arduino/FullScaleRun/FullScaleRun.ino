@@ -10,7 +10,7 @@
 #define JOGSWITCH 45
 #define SPEEDPOT 0
 
-#define MAX_NOSENSE_ITERATIONS 3
+#define MAX_NOSENSE_ITERATIONS 5
 
 FSSensor* sensor = new FSSensor();
 
@@ -82,8 +82,18 @@ void loop()
       //  Serial.println("Entering driver");
       drive->drive(spd,forward);
     }
-    else if(jog || remote->getJog1()){
+    else if(jog){
       drive->setlspd(spd);
+      drive->setrspd(spd);
+      drive->drive(spd, forward);
+    }
+    else if(remote->getJog1()){
+      drive->setlspd(spd);
+      drive->setrspd(0);
+      drive->drive(spd, forward);
+    }
+    else if(remote->getJog2()){
+      drive->setlspd(0);
       drive->setrspd(spd);
       drive->drive(spd, forward);
     }
@@ -92,7 +102,7 @@ void loop()
       drive->setrspd(0);
       drive->drive(spd, forward);
     }
-    if(sensor->allFrontSensorsOff() || sensor->allBackSensorsOff()) {
+    if((sensor->allFrontSensorsOff() && forward) || (sensor->allBackSensorsOff() && reverse)) {
       numIterationsOffTrack+=1;
     }
   }
@@ -107,12 +117,3 @@ void loop()
   Serial.print(", Time: ");
   Serial.println(millis());
 }
-
-
-
-
-
-
-
-
-

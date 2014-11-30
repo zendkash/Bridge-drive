@@ -86,17 +86,56 @@ void FSSensor::sense(bool forward) {
   Serial.print(broraw);
 
   bool fribool, frobool, flibool, flobool, bribool, brobool, blibool, blobool;
-  ;
 
   //threshold the raw inputs using flithresh, frithresh, flothresh, frothresh
-  fribool = friraw;
-  flibool = fliraw;
-  frobool = froraw;
-  flobool = floraw;
-  bribool = briraw;
-  blibool = bliraw;
-  brobool = broraw;
-  blobool = bloraw;
+  if((fliraw == flirawlast) && (fliraw!=fliboollast)) {
+    flibool = fliraw;
+  }
+  else {
+    flibool = fliboollast; 
+  }
+  if((floraw == florawlast) && (floraw!=floboollast)) {
+    flobool = floraw;
+  }
+  else {
+    flobool = floboollast; 
+  }
+  if((friraw == frirawlast) && (friraw!=friboollast)) {
+    fribool = friraw;
+  }
+  else {
+    fribool = friboollast; 
+  }
+  if((froraw == frorawlast) && (froraw!=froboollast)) {
+    frobool = froraw;
+  }
+  else {
+    frobool = froboollast; 
+  }
+  if((bliraw == blirawlast) && (bliraw!=bliboollast)) {
+    blibool = bliraw;
+  }
+  else {
+    blibool = bliboollast; 
+  }
+  if((bloraw == blorawlast) && (bloraw!=bloboollast)) {
+    blobool = bloraw;
+  }
+  else {
+    blobool = bloboollast; 
+  }
+  if((briraw == brirawlast) && (briraw!=briboollast)) {
+    bribool = briraw;
+  }
+  else {
+    bribool = briboollast; 
+  }
+  if((broraw == brorawlast) && (broraw!=broboollast)) {
+    brobool = broraw;
+  }
+  else {
+    brobool = broboollast; 
+  }
   //  Serial.print(fribool);
   //  Serial.print(frobool);
   //  Serial.print(flibool);
@@ -189,6 +228,23 @@ void FSSensor::sense(bool forward) {
   //  Serial.print(frerr);
   //  Serial.print(":");
   //  Serial.print(flerr);
+  fliboollast=flibool;
+  floboollast=flobool;
+  friboollast=fribool;
+  floboollast=frobool;
+  bliboollast=blibool;
+  bloboollast=blobool;
+  briboollast=bribool;
+  bloboollast=brobool;
+
+  flirawlast=fliraw;
+  florawlast=floraw;
+  frirawlast=friraw;
+  frorawlast=froraw;
+  blirawlast=bliraw;
+  blorawlast=bloraw;
+  brirawlast=briraw;
+  brorawlast=broraw;
 }
 
 void FSSensor::getfrerr(double &tbfrerr) {
@@ -240,10 +296,13 @@ int FSSensor::getbro() {
 }
 
 bool FSSensor::allFrontSensorsOff() {
-  return (fliraw+friraw+ floraw + froraw)==0;
+  return (fliraw+friraw+floraw+froraw)==0;
 }
 bool FSSensor::allBackSensorsOff() {
   return (bliraw+ briraw+bloraw+broraw)==0;
 };
+
+
+
 
 

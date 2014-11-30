@@ -20,8 +20,12 @@ protected:
   bool direction;
   double flerr, frerr, blerr, brerr;
 
-  int fliraw, floraw, friraw, froraw;
-  int bliraw, bloraw, briraw, broraw;
+  bool fliraw, floraw, friraw, froraw;
+  bool bliraw, bloraw, briraw, broraw;
+  bool flirawlast, florawlast, frirawlast, frorawlast;
+  bool blirawlast, blorawlast, brirawlast, brorawlast;
+  bool fliboollast, floboollast, friboollast, froboollast;
+  bool bliboollast, bloboollast, briboollast, broboollast;
   int lastfrerr, lastflerr, lastbrerr, lastblerr;
 public:
   FSSensor();
