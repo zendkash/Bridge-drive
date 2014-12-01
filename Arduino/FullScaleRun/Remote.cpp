@@ -72,7 +72,7 @@ boolean Remote::getStart() {
 }
 
 boolean Remote::getReset() {
-  return !reel;
+  return start;
 }
 
 boolean Remote::getJog1() {
@@ -81,6 +81,10 @@ boolean Remote::getJog1() {
 
 boolean Remote::getJog2() {
   return !jog_2; 
+}
+
+boolean Remote::getJogAll() {
+  return !reel
 }
 
 boolean Remote::getMain() {
