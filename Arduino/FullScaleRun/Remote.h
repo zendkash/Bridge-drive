@@ -27,6 +27,7 @@ public:
   boolean getReset();
   boolean getJog1();
   boolean getJog2();
+  boolean getJogAll();
   boolean getMain();
 };
 #endif
