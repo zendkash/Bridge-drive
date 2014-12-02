@@ -82,7 +82,7 @@ void loop()
       //  Serial.println("Entering driver");
       drive->drive(spd,forward);
     }
-    else if(jog){
+    else if(jog||remote->getJogAll()){
       drive->setlspd(spd);
       drive->setrspd(spd);
       drive->drive(spd, forward);
