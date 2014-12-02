@@ -12,6 +12,7 @@
 #define BLO_PIN 8
 #define BRI_PIN 3
 #define BRO_PIN 2
+#define MAXCOUNT 5
 
 class FSSensor: 
 public Sensor
