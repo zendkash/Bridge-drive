@@ -26,6 +26,8 @@ protected:
   bool blirawlast, blorawlast, brirawlast, brorawlast;
   bool fliboollast, floboollast, friboollast, froboollast;
   bool bliboollast, bloboollast, briboollast, broboollast;
+  int fricount, frocount, flicount, flocount;
+  int bricount, brocount, blicount, blocount;
   int lastfrerr, lastflerr, lastbrerr, lastblerr;
 public:
   FSSensor();
