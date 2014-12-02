@@ -23,6 +23,19 @@ void FSSensor::init()
   digitalWrite(BLO_PIN, HIGH);
   digitalWrite(BRI_PIN, HIGH);
   digitalWrite(BRO_PIN, HIGH);
+  fricount=0;
+  frocount=0;
+  flicount=0;
+  flocount=0;
+  bricount=0;
+  brocount=0;
+  blicount=0;
+  blocount=0;
+  
+  lastfrerr = 0;
+  lastflerr = 0;
+  lastbrerr = 0;
+  lastblerr = 0;
 }
 
 void FSSensor::sense(bool forward) {
@@ -31,6 +44,8 @@ void FSSensor::sense(bool forward) {
     if(direction != forward){
       lastfrerr = 0;
       lastflerr = 0;
+      lastbrerr = 0;
+      lastblerr = 0;
 
       flerr = 0;
       frerr = 0;
@@ -48,15 +63,17 @@ void FSSensor::sense(bool forward) {
     broraw = digitalRead(BRO_PIN);
   }
   else{
-    if(direction == forward){
+    if(direction != forward){
       lastfrerr = 0;
       lastflerr = 0;
+      lastbrerr = 0;
+      lastblerr = 0;
 
       flerr = 0;
       frerr = 0;
       blerr = 0;
       brerr = 0;
-      direction = !forward;
+      direction = forward;
     }
     fliraw = digitalRead(BRI_PIN);
     floraw = digitalRead(BRO_PIN);
@@ -89,52 +106,84 @@ void FSSensor::sense(bool forward) {
 
   //threshold the raw inputs using flithresh, frithresh, flothresh, frothresh
   if((fliraw == flirawlast) && (fliraw!=fliboollast)) {
-    flibool = fliraw;
+    fricount = fricount+1;
+    if(fricount > MAXCOUNT){
+      flibool = fliraw;
+    }
   }
   else {
     flibool = fliboollast; 
+    fricount = 0;
   }
   if((floraw == florawlast) && (floraw!=floboollast)) {
-    flobool = floraw;
+    flocount = flocount+1;
+    if(flocount > MAXCOUNT){
+      flobool = floraw;
+    }
   }
   else {
     flobool = floboollast; 
+    flocount = 0;
   }
   if((friraw == frirawlast) && (friraw!=friboollast)) {
-    fribool = friraw;
+    fricount = fricount+1;
+    if(fricount > MAXCOUNT){
+      fribool = friraw;
+    }
   }
   else {
     fribool = friboollast; 
+    fricount = 0l
   }
   if((froraw == frorawlast) && (froraw!=froboollast)) {
-    frobool = froraw;
+    frocount = frocount+1;
+    if(frocount > MAXCOUNT){
+      frobool = froraw;
+    }
   }
   else {
     frobool = froboollast; 
+    frocount = 0;
   }
   if((bliraw == blirawlast) && (bliraw!=bliboollast)) {
-    blibool = bliraw;
+    blicount = blicount + 1;
+    if(blicount > MAXCOUNT){
+      blibool = bliraw;
+    }
   }
   else {
     blibool = bliboollast; 
+    blicount = 0;
   }
   if((bloraw == blorawlast) && (bloraw!=bloboollast)) {
-    blobool = bloraw;
+    blocount = blocount+1;
+    if(blocount > MAXCOUNT){
+      blobool = bloraw;
+    }
   }
   else {
     blobool = bloboollast; 
+    blocount = 0;
   }
   if((briraw == brirawlast) && (briraw!=briboollast)) {
-    bribool = briraw;
+    bricount = bricount + 1;
+    if(bricount > MAXCOUNT){
+      bribool = briraw;
+    }
   }
   else {
     bribool = briboollast; 
+    bricount = 0;
   }
   if((broraw == brorawlast) && (broraw!=broboollast)) {
-    brobool = broraw;
+    brocount = brocount + 1;
+    if(brocount > MAXCOUNT){
+      brobool = broraw;
+    }
   }
   else {
     brobool = broboollast; 
+    brocount = 0;
   }
   //  Serial.print(fribool);
   //  Serial.print(frobool);
