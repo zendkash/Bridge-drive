@@ -133,7 +133,7 @@ void FSSensor::sense(bool forward) {
   }
   else {
     fribool = friboollast; 
-    fricount = 0l
+    fricount = 0;
   }
   if((froraw == frorawlast) && (froraw!=froboollast)) {
     frocount = frocount+1;
@@ -348,7 +348,7 @@ bool FSSensor::allFrontSensorsOff() {
   return (fliraw+friraw+floraw+froraw)==0;
 }
 bool FSSensor::allBackSensorsOff() {
-  return (bliraw+ briraw+bloraw+broraw)==0;
+  return (bliraw+briraw+bloraw+broraw)==0;
 };
 
 

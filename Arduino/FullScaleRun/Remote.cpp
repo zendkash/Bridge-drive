@@ -84,7 +84,7 @@ boolean Remote::getJog2() {
 }
 
 boolean Remote::getJogAll() {
-  return !reel
+  return !reel;
 }
 
 boolean Remote::getMain() {
