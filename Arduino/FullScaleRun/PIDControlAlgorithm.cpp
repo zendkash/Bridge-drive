@@ -2,13 +2,14 @@
 #include <stdio.h>
 #include "Arduino.h"
 
-PIDControlAlgorithm::PIDControlAlgorithm(Sensor* inputsensor, Drive* outputdrive, double proportional, double integral, double derivative, double weight, double maxspeed) : 
+PIDControlAlgorithm::PIDControlAlgorithm(Sensor* inputsensor, Drive* outputdrive, double proportional, double integral, double derivative, double weight, double minspeed, double maxspeed) : 
 ControlAlgorithm(inputsensor, outputdrive)
 {
   p = proportional;
   i = integral;
   d = derivative;
   w = weight;
+  minspd = minspeed;
   maxspd = maxspeed;
   perr = 0;
   ierr = 0;
@@ -47,12 +48,13 @@ void PIDControlAlgorithm::process()
   //    Serial.print(" ");
   //    Serial.print(totalerr);
   //    Serial.print(" ");
-  totalerr = totalerr*nomspeed/maxspd;
-
+  
+  //totalerr = totalerr*nomspeed/maxspd;
+  
   //    Serial.print(" ");
   //    Serial.print(totalerr);
   //    Serial.print(" ");
-  drive->setlspd(max(min(nomspeed - totalerr,maxspd),0));
-  drive->setrspd(max(min(nomspeed + totalerr,maxspd),0));
+  drive->setlspd(max(min(nomspeed - 2*totalerr,maxspd),nomspeed));
+  drive->setrspd(max(min(nomspeed + 2*totalerr,maxspd),nomspeed));
 }
 

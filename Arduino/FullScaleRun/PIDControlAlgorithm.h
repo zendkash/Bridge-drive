@@ -12,9 +12,9 @@ private:
   double pasterr;
   double p, i, d, w;
   double perr, ierr, derr;
-  double maxspd;
+  double minspd, maxspd;
 public:
-  PIDControlAlgorithm(Sensor* inputsensor, Drive* outputdrive, double proportional, double integral, double derivative, double weight, double speed);
+  PIDControlAlgorithm(Sensor* inputsensor, Drive* outputdrive, double proportional, double integral, double derivative, double weight, double minspeed, double maxspeed);
   void process();
 };
 

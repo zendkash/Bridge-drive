@@ -31,7 +31,7 @@ void FSSensor::init()
   brocount=0;
   blicount=0;
   blocount=0;
-  
+
   lastfrerr = 0;
   lastflerr = 0;
   lastbrerr = 0;
@@ -85,43 +85,32 @@ void FSSensor::sense(bool forward) {
     broraw = digitalRead(FLO_PIN);
   }
 
-  Serial.print(", FLI: ");
-  Serial.print(fliraw);
-  Serial.print(", FLO: ");
-  Serial.print(floraw);
-  Serial.print(", FRI: ");
-  Serial.print(friraw);
-  Serial.print(", FRO: ");
-  Serial.print(froraw);
-  Serial.print(", BLI: ");
-  Serial.print(bliraw);
-  Serial.print(", BLO: ");
-  Serial.print(bloraw);
-  Serial.print(", BRI: ");
-  Serial.print(briraw);
-  Serial.print(", BRO: ");
-  Serial.print(broraw);
-
   bool fribool, frobool, flibool, flobool, bribool, brobool, blibool, blobool;
 
   //threshold the raw inputs using flithresh, frithresh, flothresh, frothresh
   if((fliraw == flirawlast) && (fliraw!=fliboollast)) {
-    fricount = fricount+1;
-    if(fricount > MAXCOUNT){
+    flicount = flicount+1;
+    if(flicount > MAXCOUNT){
       flibool = fliraw;
+    }
+    else{
+      flibool = fliboollast;
     }
   }
   else {
     flibool = fliboollast; 
-    fricount = 0;
+    flicount = 0;
   }
   if((floraw == florawlast) && (floraw!=floboollast)) {
     flocount = flocount+1;
     if(flocount > MAXCOUNT){
       flobool = floraw;
     }
+    else{
+      flobool = floboollast;
+    }
   }
-  else {
+    else {
     flobool = floboollast; 
     flocount = 0;
   }
@@ -129,6 +118,9 @@ void FSSensor::sense(bool forward) {
     fricount = fricount+1;
     if(fricount > MAXCOUNT){
       fribool = friraw;
+    }
+    else{
+      fribool = friboollast;
     }
   }
   else {
@@ -140,6 +132,9 @@ void FSSensor::sense(bool forward) {
     if(frocount > MAXCOUNT){
       frobool = froraw;
     }
+    else{
+      frobool = froboollast;
+    }
   }
   else {
     frobool = froboollast; 
@@ -149,6 +144,9 @@ void FSSensor::sense(bool forward) {
     blicount = blicount + 1;
     if(blicount > MAXCOUNT){
       blibool = bliraw;
+    }
+    else{
+      blibool = bliboollast;
     }
   }
   else {
@@ -160,6 +158,9 @@ void FSSensor::sense(bool forward) {
     if(blocount > MAXCOUNT){
       blobool = bloraw;
     }
+    else{
+      blobool = bloboollast;
+    }
   }
   else {
     blobool = bloboollast; 
@@ -169,6 +170,9 @@ void FSSensor::sense(bool forward) {
     bricount = bricount + 1;
     if(bricount > MAXCOUNT){
       bribool = briraw;
+    }
+    else{
+      bribool = briboollast;
     }
   }
   else {
@@ -180,13 +184,16 @@ void FSSensor::sense(bool forward) {
     if(brocount > MAXCOUNT){
       brobool = broraw;
     }
+    else{
+      brobool = broboollast;
+    }
   }
   else {
     brobool = broboollast; 
     brocount = 0;
   }
   //  Serial.print(fribool);
-  //  Serial.print(frobool);
+  //  Serial.print(frobool);p
   //  Serial.print(flibool);
   //  Serial.print(flobool);
 
@@ -280,11 +287,11 @@ void FSSensor::sense(bool forward) {
   fliboollast=flibool;
   floboollast=flobool;
   friboollast=fribool;
-  floboollast=frobool;
+  froboollast=frobool;
   bliboollast=blibool;
   bloboollast=blobool;
   briboollast=bribool;
-  bloboollast=brobool;
+  broboollast=brobool;
 
   flirawlast=fliraw;
   florawlast=floraw;
@@ -294,6 +301,32 @@ void FSSensor::sense(bool forward) {
   blorawlast=bloraw;
   brirawlast=briraw;
   brorawlast=broraw;
+
+  Serial.print(", FLI: ");
+  Serial.print(fliraw);
+  Serial.print(flibool);
+  Serial.print(", FLO: ");
+  Serial.print(floraw);
+  Serial.print(flobool);
+  Serial.print(", FRI: ");
+  Serial.print(friraw);
+  Serial.print(fribool);
+  Serial.print(", FRO: ");
+  Serial.print(froraw);
+  Serial.print(frobool);
+  Serial.print(", BLI: ");
+  Serial.print(bliraw);
+  Serial.print(blibool);
+  Serial.print(", BLO: ");
+  Serial.print(bloraw);
+  Serial.print(blobool);  
+  Serial.print(", BRI: ");
+  Serial.print(briraw);
+  Serial.print(bribool);
+  Serial.print(", BRO: ");
+  Serial.print(broraw);
+  Serial.print(brobool);
+
 }
 
 void FSSensor::getfrerr(double &tbfrerr) {
@@ -313,35 +346,35 @@ void FSSensor::getblerr(double &tbblerr) {
 }
 
 int FSSensor::getfli() {
-  return fliraw;
+  return fliboollast;
 }
 
 int FSSensor::getflo() {
-  return floraw;
+  return floboollast;
 }
 
 int FSSensor::getfri() {
-  return friraw;
+  return friboollast;
 }
 
 int FSSensor::getfro() {
-  return froraw;
+  return froboollast;
 }
 
 int FSSensor::getbli() {
-  return bliraw;
+  return bliboollast;
 }
 
 int FSSensor::getblo() {
-  return bloraw;
+  return bloboollast;
 }
 
 int FSSensor::getbri() {
-  return briraw;
+  return briboollast;
 }
 
 int FSSensor::getbro() {
-  return broraw;
+  return broboollast;
 }
 
 bool FSSensor::allFrontSensorsOff() {
@@ -350,8 +383,3 @@ bool FSSensor::allFrontSensorsOff() {
 bool FSSensor::allBackSensorsOff() {
   return (bliraw+briraw+bloraw+broraw)==0;
 };
-
-
-
-
-

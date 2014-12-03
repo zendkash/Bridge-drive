@@ -6,8 +6,8 @@
 
 #define FLI_PIN 7
 #define FLO_PIN 6
-#define FRI_PIN 4
-#define FRO_PIN 5
+#define FRI_PIN 5
+#define FRO_PIN 4
 #define BLI_PIN 9
 #define BLO_PIN 8
 #define BRI_PIN 3

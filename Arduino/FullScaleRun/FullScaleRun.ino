@@ -10,13 +10,15 @@
 #define JOGSWITCH 45
 #define SPEEDPOT 0
 
+#define JOGSPEED 700
+
 #define MAX_NOSENSE_ITERATIONS 5
 
 FSSensor* sensor = new FSSensor();
 
 FSDrive* drive = new FSDrive(sensor, 0);
 //                                                                    P , I,  D,  w
-ControlAlgorithm* controller = new PIDControlAlgorithm(sensor, drive, 120, 0, 10, 0.5, 1023); 
+ControlAlgorithm* controller = new PIDControlAlgorithm(sensor, drive, 50, 0, 0, 1, 128, 1023); 
 Remote* remote = new Remote();
 
 int spd;
@@ -48,28 +50,28 @@ void loop()
   sensor->sense(forward);
   //since the emergency stop is normally open, switch convension to make logical sense
 
-  Serial.print("Switches: {FWD ");
-  Serial.print(forward);
-  Serial.print(", REV ");
-  Serial.print(reverse);
-  Serial.print(", JOG ");
-  Serial.print(jog);
-  Serial.print(", SPD ");
-  Serial.print(spd);
+//  Serial.print("Switches: {FWD ");
+//  Serial.print(forward);
+//  Serial.print(", REV ");
+//  Serial.print(reverse);
+//  Serial.print(", JOG ");
+//  Serial.print(jog);
+//  Serial.print(", SPD ");
+//  Serial.print(spd);
   Serial.print("} Remote: {GO ");
   Serial.print(remote->getStart());
-  Serial.print(", JOGA");
-  Serial.print(remote->getJogAll());
-  Serial.print(", JOG1");
-  Serial.print(remote->getJog1());
-  Serial.print(", JOG2 ");
-  Serial.print(remote->getJog2());
-  Serial.print("}");
+//  Serial.print(", JOGA");
+//  Serial.print(remote->getJogAll());
+//  Serial.print(", JOG1");
+//  Serial.print(remote->getJog1());
+//  Serial.print(", JOG2 ");
+//  Serial.print(remote->getJog2());
+//  Serial.print("}");
   
   if(jog||remote->getJogAll()){
-    drive->setlspd(spd);
-    drive->setrspd(spd);
-    drive->drive(spd, forward);
+    drive->setlspd(JOGSPEED);
+    drive->setrspd(JOGSPEED);
+    drive->drive(JOGSPEED, forward);
   }
   else if(remote->getJog1()){
     drive->setlspd(spd);
@@ -94,8 +96,13 @@ void loop()
   if(remote->getReset()) {
     numIterationsOffTrack=0;
   }
-  else if(sensor->allFrontSensorsOff()) {
-    numIterationsOffTrack+=1;
+  else if(numIterationsOffTrack < MAX_NOSENSE_ITERATIONS) {
+    if(sensor->allFrontSensorsOff()) {
+      numIterationsOffTrack+=1;
+    }
+    else {
+      numIterationsOffTrack=0;
+    }
   }
   Serial.print(", Time: ");
   Serial.println(millis());
