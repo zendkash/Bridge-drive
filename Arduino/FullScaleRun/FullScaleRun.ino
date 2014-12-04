@@ -18,7 +18,7 @@ FSSensor* sensor = new FSSensor();
 
 FSDrive* drive = new FSDrive(sensor, 0);
 //                                                                    P , I,  D,  w
-ControlAlgorithm* controller = new PIDControlAlgorithm(sensor, drive, 50, 0, 0, 1, 128, 1023); 
+ControlAlgorithm* controller = new PIDControlAlgorithm(sensor, drive, 100, 0, 0, 0, 128, 1023); 
 Remote* remote = new Remote();
 
 int spd;
@@ -50,49 +50,73 @@ void loop()
   sensor->sense(forward);
   //since the emergency stop is normally open, switch convension to make logical sense
 
-//  Serial.print("Switches: {FWD ");
-//  Serial.print(forward);
-//  Serial.print(", REV ");
-//  Serial.print(reverse);
-//  Serial.print(", JOG ");
-//  Serial.print(jog);
-//  Serial.print(", SPD ");
-//  Serial.print(spd);
+  //  Serial.print("Switches: {FWD ");
+  //  Serial.print(forward);
+  //  Serial.print(", REV ");
+  //  Serial.print(reverse);
+  //  Serial.print(", JOG ");
+  //  Serial.print(jog);
+  //  Serial.print(", SPD ");
+  //  Serial.print(spd);
   Serial.print("} Remote: {GO ");
   Serial.print(remote->getStart());
-//  Serial.print(", JOGA");
-//  Serial.print(remote->getJogAll());
-//  Serial.print(", JOG1");
-//  Serial.print(remote->getJog1());
-//  Serial.print(", JOG2 ");
-//  Serial.print(remote->getJog2());
-//  Serial.print("}");
-  
-  if(jog||remote->getJogAll()){
-    drive->setlspd(JOGSPEED);
-    drive->setrspd(JOGSPEED);
-    drive->drive(JOGSPEED, forward);
+  //  Serial.print(", JOGA");
+  //  Serial.print(remote->getJogAll());
+  //  Serial.print(", JOG1");
+  //  Serial.print(remote->getJog1());
+  //  Serial.print(", JOG2 ");
+  //  Serial.print(remote->getJog2());
+  //  Serial.print("}");
+  if(remote->getStart()){
+    if(jog||remote->getJogAll()){
+      drive->setlspd(JOGSPEED);
+      drive->setrspd(JOGSPEED);
+      drive->drive(JOGSPEED, forward);
+    }
+    else if(remote->getJog1()){
+      drive->setlspd(JOGSPEED);
+      drive->setrspd(0);
+      drive->drive(spd, forward);
+    }
+    else if(remote->getJog2()){
+      drive->setlspd(0);
+      drive->setrspd(JOGSPEED);
+      drive->drive(spd, forward);
+    }
+    else if((numIterationsOffTrack < MAX_NOSENSE_ITERATIONS) && (forward || reverse)){
+      controller->process();
+      //  Serial.println("Entering driver");
+      drive->drive(spd,forward);
+    }
+    else{
+      drive->setlspd(0);
+      drive->setrspd(0);
+      drive->drive(spd, forward);
+    }
   }
-  else if(remote->getJog1()){
-    drive->setlspd(spd);
-    drive->setrspd(0);
-    drive->drive(spd, forward);
+  else {
+    if(jog||remote->getJogAll()){
+      drive->setlspd(spd);
+      drive->setrspd(spd);
+      drive->drive(spd, forward);
+    }
+    else if(remote->getJog1()){
+      drive->setlspd(spd);
+      drive->setrspd(0);
+      drive->drive(spd, forward);
+    }
+    else if(remote->getJog2()){
+      drive->setlspd(0);
+      drive->setrspd(spd);
+      drive->drive(spd, forward);
+    }
+    else {
+      drive->setlspd(0);
+      drive->setrspd(0);
+      drive->drive(spd, forward);
+    }
   }
-  else if(remote->getJog2()){
-    drive->setlspd(0);
-    drive->setrspd(spd);
-    drive->drive(spd, forward);
-  }
-  else if((numIterationsOffTrack < MAX_NOSENSE_ITERATIONS) && (remote->getStart()) && (forward || reverse)){
-    controller->process();
-    //  Serial.println("Entering driver");
-    drive->drive(spd,forward);
-  }
-  else{
-    drive->setlspd(0);
-    drive->setrspd(0);
-    drive->drive(spd, forward);
-  }
+
   if(remote->getReset()) {
     numIterationsOffTrack=0;
   }
@@ -107,6 +131,8 @@ void loop()
   Serial.print(", Time: ");
   Serial.println(millis());
 }
+
+
 
 
 
