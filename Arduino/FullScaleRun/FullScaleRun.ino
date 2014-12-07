@@ -17,13 +17,12 @@
 FSSensor* sensor = new FSSensor();
 
 FSDrive* drive = new FSDrive(sensor, 0);
-//                                                                    P , I,  D,  w
-ControlAlgorithm* controller = new PIDControlAlgorithm(sensor, drive, 100, 0, 0, 0, 128, 1023); 
+//                                                                    P , I,  D, w, F, R
+ControlAlgorithm* controller = new PIDControlAlgorithm(sensor, drive, 100, 0, 0, 0, 1, 0.75, 0, 1023); 
 Remote* remote = new Remote();
 
 int spd;
 bool forward, reverse, jog;
-bool forwarddirection;
 int numIterationsOffTrack;
 
 void setup()
@@ -84,7 +83,7 @@ void loop()
       drive->drive(spd, forward);
     }
     else if((numIterationsOffTrack < MAX_NOSENSE_ITERATIONS) && (forward || reverse)){
-      controller->process();
+      controller->process(forward);
       //  Serial.println("Entering driver");
       drive->drive(spd,forward);
     }

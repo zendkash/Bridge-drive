@@ -14,7 +14,7 @@ public:
     sensor = sens;
     drive = drv;
   }
-  virtual void process(){
+  virtual void process(bool direction){
   }
 };
 

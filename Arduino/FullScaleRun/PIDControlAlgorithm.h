@@ -5,6 +5,8 @@
 #include "Sensor.h"
 #include "Drive.h"
 
+#define FORWARD true
+
 class PIDControlAlgorithm : 
 public ControlAlgorithm
 {
@@ -13,9 +15,10 @@ private:
   double p, i, d, w;
   double perr, ierr, derr;
   double minspd, maxspd;
+  double frontscl, rearscl;
 public:
-  PIDControlAlgorithm(Sensor* inputsensor, Drive* outputdrive, double proportional, double integral, double derivative, double weight, double minspeed, double maxspeed);
-  void process();
+  PIDControlAlgorithm(Sensor* inputsensor, Drive* outputdrive, double proportional, double integral, double derivative, double weight, double frontscale, double rearscale, double minspeed, double maxspeed);
+  void process(bool direction);
 };
 
 #endif
